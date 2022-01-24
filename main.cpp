@@ -15,7 +15,7 @@ void clear_array(int a[][9],int );
 void second_line();
 void end_line();
 void Table(int sod[][9],int color[][9]);
-void input2(int a[][9]);	
+void input2(int a[][9],int color[][9]);	
 bool is_between(int n ,int i , int j);
 void create_Puzzle();
 void print(int a[][9]);
@@ -26,6 +26,8 @@ void change_color(int a);
 int counter(int sod[][9]);
 void write_text(int a[][n]);
 //-----------------------------------------------------------------------------
+int search_int_in_array(int a[n][n],int n);
+void check(int sod[][n],int color[][n]);
 bool is_repeated(int a[9][9],int n,int row,int column);
 void update(int sod[][9],int color[][9],int n);
 void Solve_Puzzle();
@@ -59,6 +61,15 @@ int main(){
 }
 
 void menu(){
+	change_color(6);
+	cout << "---Wellcome to Game---" << endl<< endl;
+	change_color(15);
+	
+	
+	change_color(9);
+	cout << "Choose from the following options:"<< endl<< endl;
+	change_color(15);
+	
 	int number_user = 0;
 	cout << "1. Create Puzzle " <<endl;
 	cout << "2. Solve Puzzle " <<endl;
@@ -95,36 +106,26 @@ void create_Puzzle(){
 }
 
 void Solve_Puzzle(){
-	int sod[n][n];
+	int sod[n][n],color[n][n];
 	clear_array(sod,0);
-	load_text(sod,"asd");
-	input2(sod);
-//	int number_user = 0;
-//	cout << "1. Random Puzzle" <<endl;
-//	cout << "2. Custom Puzzle " <<endl;
-//	cout << "3. Menu" <<endl;
-//	
-//	cin >> number_user;
-//	
-//	switch(number_user){
-//		case(1):{
-////			custom puzzle
-//			break;
-//		}
-//		case(2):{
-//			string adress;
-////			cout << "Enter Adress :" <<endl;
-////			cin >> adress;
-//			
-//			break;
-//		}
-//		case(3):{
-//			break;
-//		}
-//		default:{
-//			break;
-//		}
-//	}		
+	system("CLS");
+	string Address = "D:\\decktop\\mabani_project\\output.txt";
+	
+	change_color(6);
+	cout << "---Solve Sudoku---" << endl << endl;
+	change_color(15);
+	
+	cout << "Enter the Sudoku puzzle address as in the example below:" << endl;
+	change_color(9);
+	cout << Address << endl;
+	change_color(15);
+	cin >> Address ;
+	
+	
+	load_text(sod,Address);
+	input2(sod,color);
+	check(sod,color);
+			
 	
 }
 // --------------------------------------------------------------------------------------------------------------
@@ -271,8 +272,45 @@ void write_text(int a[][n]){
 	}	
 }
 // --------------------------------------------------------------------------------------------------------------
+void check(int sod[][n],int color[][n]){
+	update(sod,color,10);
+	Table(sod,color);
+	
+	int count_false = search_int_in_array(color,4);
+	
+	cout << "---End Game---" << endl;
+	if (count_false == 0){
+		change_color(6);
+		cout << "You won!" <<endl;
+		change_color(15);
+	}
+	else{
+		change_color(4);
+		cout << "Game Over!" <<endl;
+		change_color(15);
+	}
+	
+	
+	
+}
+
+int search_int_in_array(int a[n][n],int n){
+	int count = 0 ;
+	for(int i = 0 ; i < n ; i++){
+		for(int j = 0 ; j < n ; j++){
+			if(a[i][j] == n){
+				count++;
+			}
+		}
+	}
+	
+	return count;
+}
+
+
 void load_text(int a[][n],string text){
-	ifstream inputFile("soudoco.txt");
+	ifstream inputFile;
+	inputFile.open(text.c_str());
 	int temp;
 	
 	for(int i =0;i<n;i++){
@@ -502,8 +540,7 @@ void update(int sod[][9],int color[][9],int n){
 	}
 }
 
-void input2(int a[][9]){
-	int color[9][9];
+void input2(int a[][9],int color[][9]){
 	int row,column,value;
 	bool adame = true;
 	int number;
@@ -511,6 +548,14 @@ void input2(int a[][9]){
 	clear_array(color,15);
 	colored_custom(a,color);
 	Table(a,color);
+	cout << "--------------------------------"<<endl;
+	change_color(6);
+	cout << "Golden numbers are the default numbers in the table" <<endl;
+	change_color(15);
+	cout << "White numbers are user input" <<endl<<endl;
+	change_color(3);
+	cout << "Enter values for all empty cells and select the second option at the end to correct the sudoku puzzle." <<endl<<endl;
+	change_color(15);
 	cout << "-----------Start Game-----------"<<endl;
 	do{
 		row = 0;
@@ -520,42 +565,47 @@ void input2(int a[][9]){
 		
 		
 		while(!is_between(row,n+1,0)){
-			cout << "insert row :  " << endl;
+			cout << "insert row :  " ;
 			cin >> row;
 		}
-		cout << "-------------" <<endl;
 		while(!is_between(column,n+1,0)){
-			cout << "insert column :  " << endl;
+			cout << "insert column :  " ;
 			cin >> column;
 		}
-		cout << "-------------" <<endl;
 		while(!is_between(value,n+1,0)){
-			cout << "insert value :  " << endl;
+			cout << "insert value :  ";
 			cin >> value;
 		}
-		cout << "-------------" <<endl;
 		
 		
 		row--;
 		column--;
 		if(color[row][column]!=6){
 			a[row][column] = value;
+			Table(a,color);
 		}
-		else{		
-			cout << "Can't Change Customs!" << endl;
+		else{	
+			Table(a,color);
+			change_color(4);	
+			cout << "-Can't Change Customs!" << endl;
+			change_color(15);
 		}
-		Table(a,color);
+		
 		
 		end = is_end(a,color);
 		cout << "1.add another number" << endl;
 		cout << "2.done" << endl;
 		cin >> number;
-		if((number == 2)&& end){
-			adame = false;
+		if(number == 2){
+			if(end){
+				adame = false;
+			}
 		}
-		else if (n != 1){
-			cout << "some place is empty or false" << endl;
+		else if ((n != 1) && (number == 2)){
+			cout << "some place is empty" << endl;
 		}
+		system("CLS");
+		Table(a,color);
 	}while(adame);
 	
 	
