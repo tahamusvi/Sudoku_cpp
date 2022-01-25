@@ -2,40 +2,39 @@
 #include <fstream>
 #include <windows.h>
 using namespace std;
-
-
+// --------------------------------------------------------------------------------------------------------------
 const int n = 9;
-
+// --------------------------------------------------------------------------------------------------------------
 void menu();
 void frist_line();
 void main_line();
-void copy_row(int a[][9],int b[9],int n);
-void main_column(int temp[9]);
-void clear_array(int a[][9],int );
+void copy_row(int a[][n],int b[n],int n);
+void main_column(int temp[n]);
+void clear_array(int a[][n],int );
 void second_line();
 void end_line();
-void Table(int sod[][9],int color[][9]);
-void input2(int a[][9],int color[][9]);	
+void Table(int sud[][n],int color[][n]);
+void input2(int a[][n],int color[][n]);	
 bool is_between(int n ,int i , int j);
 void create_Puzzle();
 void print(int a[][9]);
-void colored_custom(int sod[][9],int color[][9]);
-bool is_end(int sod[][9],int color[][9]);
-void input1(int a[][9]);
+void colored_custom(int sud[][n],int color[][n]);
+bool is_end(int sud[][n],int color[][n]);
+void input1(int a[][n]);
 void change_color(int a);
-int counter(int sod[][9]);
+int counter(int sud[][n]);
 void write_text(int a[][n]);
 //-----------------------------------------------------------------------------
-int search_int_in_array(int a[n][n],int n);
-void check(int sod[][n],int color[][n]);
-bool is_repeated(int a[9][9],int n,int row,int column);
-void update(int sod[][9],int color[][9],int n);
-void Solve_Puzzle();
 void load_text(int a[][n],string text);
+int search_int_in_array(int a[n][n],int n);
+void check(int sud[][n],int color[][n]);
+bool is_repeated(int a[n][n],int n,int row,int column);
+void update(int sud[][n],int color[][n],int n);
+void Solve_Puzzle();
+//-----------------------------------------------------------------------------
 void Solve_Puzzle_Automatically();
-bool find_free(int *x,int *y,int sod[][9]);
-bool solve(int sod[][n],int color[][n]);
-
+bool find_free(int *x,int *y,int sud[][n]);
+bool solve(int sud[][n],int color[][n]);
 //-----------------------------------------------------------------------------
 char c1 = (char)177;
 char s1 = (char)186;  
@@ -52,12 +51,8 @@ char s12 = (char)202;
 char s13 = (char)185;
 string space3 = "   ";
 
-
-
-HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-
-
+HANDLE Color = GetStdHandle(STD_OUTPUT_HANDLE);
+// --------------------------------------------------------------------------------------------------------------
 int main(){	
 	menu();
 	return 0;
@@ -105,17 +100,17 @@ void menu(){
 }
 
 void create_Puzzle(){
-	int sod[9][9];
-	clear_array(sod,0);
-	input1(sod);
+	int sud[n][n];
+	clear_array(sud,0);
+	input1(sud);
 
-	write_text(sod);
+	write_text(sud);
 	cout << "---The puzzle was saved successfull---" << endl;
 }
 
 void Solve_Puzzle(){
-	int sod[n][n],color[n][n];
-	clear_array(sod,0);
+	int sud[n][n],color[n][n];
+	clear_array(sud,0);
 	system("CLS");
 	string Address = "D:\\decktop\\mabani_project\\output.txt";
 	
@@ -130,15 +125,15 @@ void Solve_Puzzle(){
 	cin >> Address ;
 	
 	
-	load_text(sod,Address);
-	input2(sod,color);
-	check(sod,color);
+	load_text(sud,Address);
+	input2(sud,color);
+	check(sud,color);
 			
 }
 
 void Solve_Puzzle_Automatically(){
-	int sod[n][n],color[n][n];
-	clear_array(sod,0);
+	int sud[n][n],color[n][n];
+	clear_array(sud,0);
 	clear_array(color,6);
 	
 	system("CLS");
@@ -155,8 +150,8 @@ void Solve_Puzzle_Automatically(){
 	cin >> Address ;
 	
 	
-	load_text(sod,Address);
-	Table(sod,color);
+	load_text(sud,Address);
+	Table(sud,color);
 	cout << "------------------" << endl;
 	change_color(9);
 	cout << "for start solving enter 1" << endl;
@@ -167,8 +162,8 @@ void Solve_Puzzle_Automatically(){
 	}
 	
 	
-	if(solve(sod,color)){
-		Table(sod,color);
+	if(solve(sud,color)){
+		Table(sud,color);
 	}
 	else{
 		cout << "this sudoco is not true!" << endl;
@@ -176,32 +171,32 @@ void Solve_Puzzle_Automatically(){
 			
 }
 // --------------------------------------------------------------------------------------------------------------
-bool solve(int sod[][n],int color[][n]){
+bool solve(int sud[][n],int color[][n]){
 	int row,column;
 	
-	if(!find_free(&row,&column,sod)){
+	if(!find_free(&row,&column,sud)){
 		return true	;	
 	}
 	
 	
-	for(int i=1;i<=9;i++){
-		if(!is_repeated(sod,i,row,column)){
-			sod[row][column] = i;
+	for(int i=1;i<=n;i++){
+		if(!is_repeated(sud,i,row,column)){
+			sud[row][column] = i;
 			color[row][column] = 10;
-			if(solve(sod,color)){
+			if(solve(sud,color)){
 				return true;
 			}
-			sod[row][column] = 0;	
+			sud[row][column] = 0;	
 			color[row][column] = 15;		
 		}
 	}
 	return false;
 }
 
-bool find_free(int *x,int *y,int sod[][9]){
-	for(int i = 0;i<9;i++){
-		for(int j = 0; j < 9 ; j++){
-			if(sod[i][j]==0){
+bool find_free(int *x,int *y,int sud[][n]){
+	for(int i = 0;i<n;i++){
+		for(int j = 0; j < n ; j++){
+			if(sud[i][j]==0){
 				*x = i;
 				*y = j;
 				return true;			
@@ -210,31 +205,28 @@ bool find_free(int *x,int *y,int sod[][9]){
 	}
 	return false;
 }
-
-
 // --------------------------------------------------------------------------------------------------------------
 void change_color(int a){
-	SetConsoleTextAttribute(hConsole, a);
+	SetConsoleTextAttribute(Color, a);
 }
 
-bool is_end1(int color[][9]){
+bool is_end1(int color[][n]){
 	bool end = false;
-	for(int i = 0 ; i < 9 ;i++){
-		for(int j = 0 ; j < 9 ; j++){
+	for(int i = 0 ; i < n ;i++){
+		for(int j = 0 ; j < n ; j++){
 			if(color[i][j] == 4){
 				end = true;
 			}
 		}
 	}
-	
 	return end;
 }
 
-int counter(int sod[][9]){
+int counter(int sud[][n]){
 	int count = 0;
-	for(int i = 0 ; i < 9 ; i++){
-		for(int j = 0 ; j<9;j++){
-			if (sod[i][j] != 0){	
+	for(int i = 0 ; i < n ; i++){
+		for(int j = 0 ; j<n;j++){
+			if (sud[i][j] != 0){	
 				count++;
 			}
 		}
@@ -242,8 +234,8 @@ int counter(int sod[][9]){
 	return count;
 }
 
-void input1(int a[][9]){
-	int color[9][9];
+void input1(int a[][n]){
+	int color[n][n];
 	int row,column,value;
 	bool adame = true,end;
 	int number;
@@ -344,11 +336,11 @@ void input1(int a[][9]){
 void write_text(int a[][n]){
 	
 	ofstream outputFile("soudoco.txt", ios::out);
-//	if( !outputFile)
-// 	{
-// 	cerr << "some thing wrong during opening file!" << endl;
-// 	exit(1);
-// 	}	 
+	if( !outputFile)
+ 	{
+ 	cerr << "some thing wrong during opening file!" << endl;
+ 	exit(1);
+ 	}	 
 	for(int i =0;i<n;i++){
 		for(int j = 0 ;j<n;j++){
 			outputFile << a[i][j] << endl;
@@ -356,9 +348,9 @@ void write_text(int a[][n]){
 	}	
 }
 // --------------------------------------------------------------------------------------------------------------
-void check(int sod[][n],int color[][n]){
-	update(sod,color,10);
-	Table(sod,color);
+void check(int sud[][n],int color[][n]){
+	update(sud,color,10);
+	Table(sud,color);
 	
 	int count_false = search_int_in_array(color,4);
 	
@@ -391,7 +383,6 @@ int search_int_in_array(int a[n][n],int n){
 	return count;
 }
 
-
 void load_text(int a[][n],string text){
 	ifstream inputFile;
 	inputFile.open(text.c_str());
@@ -407,7 +398,7 @@ void load_text(int a[][n],string text){
 	inputFile.close() ;
 }
 
-void print(int a[][9]){
+void print(int a[][n]){
 	for(int i = 0;i<n;i++){
 		for(int j=0;j<n;j++){
 			cout << a[i][j] << " " ;
@@ -416,14 +407,14 @@ void print(int a[][9]){
 	}
 }
 
-bool is_repeated(int a[9][9],int n,int row,int column){
+bool is_repeated(int a[n][n],int n,int row,int column){
 	bool repeat = false;
-	for(int i=0;i<9;i++){
+	for(int i=0;i<n;i++){
 		if((n==a[row][i])&&(i!=column)){
 			repeat = true;
 		}
 	}
-	for(int i=0;i<9;i++){
+	for(int i=0;i<n;i++){
 		if((n==a[i][column])&&(i!=row)){
 			repeat = true;
 		}
@@ -440,7 +431,7 @@ bool is_repeated(int a[9][9],int n,int row,int column){
 
 void frist_line(){
 	cout << s3;
-	for(int i = 0;i<9;i++){
+	for(int i = 0;i<n;i++){
 			for(int h =0;h<3;h++){
 				cout << s2 ;
 			}
@@ -470,7 +461,7 @@ void end_line(){
 void main_line(){
 	string output = "";
 	cout << s5;
-	for(int i = 0;i<9;i++){
+	for(int i = 0;i<n;i++){
 			for(int h =0;h<3;h++){
 				output += s2 ;
 			}
@@ -485,7 +476,7 @@ void main_line(){
 void second_line(){
 	string output = "";
 	cout << s5;
-	for(int i = 0;i<9;i++){
+	for(int i = 0;i<n;i++){
 			for(int h =0;h<3;h++){
 				output += s8 ;
 			}
@@ -497,16 +488,16 @@ void second_line(){
 	cout << output << s13 << endl;
 }
 
-void copy_row(int a[][9],int b[9],int n){
+void copy_row(int a[][n],int b[n],int n){
 	for(int i=0;i<9;i++){
 		b[i] = a[n][i];
 	}
 }
 
-void colored_custom(int sod[][9],int color[][9]){
+void colored_custom(int sud[][9],int color[][9]){
 	for(int i = 0;i<9;i++){
 		for(int j = 0;j<9;j++){
-			if(sod[i][j]!=0){
+			if(sud[i][j]!=0){
 				color[i][j] = 6;
 			}
 		}
@@ -556,7 +547,7 @@ void clear_array(int a[][9],int num){
 	}
 }
 
-void Table(int sod[][9],int color[][9]){
+void Table(int sud[][9],int color[][9]){
 	int temp[9];
 	int temp_color[9];
 	system("CLS");
@@ -564,13 +555,13 @@ void Table(int sod[][9],int color[][9]){
 	int n = 0;
 	for(int i =0;i<3;i++){
 		for(int j=0;j<2;j++){
-			copy_row(sod,temp,n);
+			copy_row(sud,temp,n);
 			copy_row(color,temp_color,n);
 			main_column(temp,temp_color);
 			n++;
 			second_line();	
 		}
-		copy_row(sod,temp,n);
+		copy_row(sud,temp,n);
 		copy_row(color,temp_color,n);
 		main_column(temp,temp_color);
 		n++;
@@ -590,11 +581,11 @@ bool is_between(int n ,int i , int j){
 	return result;
 }
 
-bool is_end(int sod[][9],int color[][9]){
+bool is_end(int sud[][9],int color[][9]){
 	bool end = true;
 	for(int i = 0 ; i < 9 ;i++){
 		for(int j = 0 ; j < 9 ; j++){
-			if(sod[i][j]==0){
+			if(sud[i][j]==0){
 				end = false;
 			}
 			if(color[i][j] == 4){
@@ -606,14 +597,14 @@ bool is_end(int sod[][9],int color[][9]){
 	return end;
 }
 
-void update(int sod[][9],int color[][9],int n){
+void update(int sud[][9],int color[][9],int n){
 	
 	for(int i = 0 ; i < 9 ;i++){
 		for(int j = 0 ; j < 9 ; j++){
 			
-			if((color[i][j] != 6) &&(sod[i][j]!=0)){
-				cout << sod[i][j] << endl;
-				if(!is_repeated(sod,sod[i][j],i,j)){
+			if((color[i][j] != 6) &&(sud[i][j]!=0)){
+				cout << sud[i][j] << endl;
+				if(!is_repeated(sud,sud[i][j],i,j)){
 					color[i][j] = n;
 				}
 				else{
@@ -694,11 +685,3 @@ void input2(int a[][9],int color[][9]){
 	
 	
 }
-
-
-
-
-
-
-
-
