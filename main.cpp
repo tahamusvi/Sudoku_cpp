@@ -32,7 +32,9 @@ bool is_repeated(int a[9][9],int n,int row,int column);
 void update(int sod[][9],int color[][9],int n);
 void Solve_Puzzle();
 void load_text(int a[][n],string text);
-
+void Solve_Puzzle_Automatically();
+bool find_free(int *x,int *y,int sod[][9]);
+bool solve(int sod[][n],int color[][n]);
 
 //-----------------------------------------------------------------------------
 char c1 = (char)177;
@@ -58,6 +60,7 @@ HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 int main(){	
 	menu();
+	return 0;
 }
 
 void menu(){
@@ -73,7 +76,8 @@ void menu(){
 	int number_user = 0;
 	cout << "1. Create Puzzle " <<endl;
 	cout << "2. Solve Puzzle " <<endl;
-	cout << "3. Exit" <<endl;
+	cout << "3. Solve Automatically" << endl;
+	cout << "4. Exit" <<endl;
 
 	
 	cin >> number_user;
@@ -88,6 +92,10 @@ void menu(){
 			break;
 		}
 		case(3):{
+			Solve_Puzzle_Automatically();
+			break;
+		}
+		case(4):{
 			break;
 		}
 		default:{
@@ -126,8 +134,84 @@ void Solve_Puzzle(){
 	input2(sod,color);
 	check(sod,color);
 			
-	
 }
+
+void Solve_Puzzle_Automatically(){
+	int sod[n][n],color[n][n];
+	clear_array(sod,0);
+	clear_array(color,6);
+	
+	system("CLS");
+	string Address = "D:\\decktop\\mabani_project\\output.txt";
+	
+	change_color(6);
+	cout << "---Solve Automatically Sudoku---" << endl << endl;
+	change_color(15);
+	
+	cout << "Enter the Sudoku puzzle address as in the example below:" << endl;
+	change_color(9);
+	cout << Address << endl;
+	change_color(15);
+	cin >> Address ;
+	
+	
+	load_text(sod,Address);
+	Table(sod,color);
+	cout << "------------------" << endl;
+	change_color(9);
+	cout << "for start solving enter 1" << endl;
+	change_color(15);
+	int n = 0;
+	while(n!=1){
+		cin >> n;
+	}
+	
+	
+	if(solve(sod,color)){
+		Table(sod,color);
+	}
+	else{
+		cout << "this sudoco is not true!" << endl;
+	}
+			
+}
+// --------------------------------------------------------------------------------------------------------------
+bool solve(int sod[][n],int color[][n]){
+	int row,column;
+	
+	if(!find_free(&row,&column,sod)){
+		return true	;	
+	}
+	
+	
+	for(int i=1;i<=9;i++){
+		if(!is_repeated(sod,i,row,column)){
+			sod[row][column] = i;
+			color[row][column] = 10;
+			if(solve(sod,color)){
+				return true;
+			}
+			sod[row][column] = 0;	
+			color[row][column] = 15;		
+		}
+	}
+	return false;
+}
+
+bool find_free(int *x,int *y,int sod[][9]){
+	for(int i = 0;i<9;i++){
+		for(int j = 0; j < 9 ; j++){
+			if(sod[i][j]==0){
+				*x = i;
+				*y = j;
+				return true;			
+				}
+		}
+	}
+	return false;
+}
+
+
 // --------------------------------------------------------------------------------------------------------------
 void change_color(int a){
 	SetConsoleTextAttribute(hConsole, a);
